@@ -275,9 +275,6 @@
                 <Grid ColumnDefinitions="*,190,190,190" ColumnSpacing="12">
                     <StackPanel>
                         <TextBlock Text="{Binding SelectedMonth.ShortTitle}" FontSize="30" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
-                        <TextBlock Text="Отмечай выполнение привычек по дням, как в месячных листах Excel."
-                                   Foreground="{DynamicResource SecondaryTextBrush}"
-                                   Margin="0,6,0,0"/>
                     </StackPanel>
 
                     <Border Grid.Column="1" Classes="metric">
