@@ -1,0 +1,14 @@
+bin/
+obj/
+
+.DS_Store
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+.vs/
+.vscode/
+
+TestResults/
+*.nupkg

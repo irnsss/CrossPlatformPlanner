@@ -1,0 +1,84 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CrossPlatformPlanner.App"
+             xmlns:local="using:CrossPlatformPlanner"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F4F7FB"/>
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#172033"/>
+                    <SolidColorBrush x:Key="SidebarPanelBrush" Color="#24314C"/>
+                    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="SurfaceSoftBrush" Color="#EEF3F8"/>
+                    <SolidColorBrush x:Key="SurfaceSubtleBrush" Color="#F8FAFD"/>
+                    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#172033"/>
+                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#697789"/>
+                    <SolidColorBrush x:Key="MutedTextBrush" Color="#8A96A8"/>
+                    <SolidColorBrush x:Key="SidebarTextBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="SidebarMutedTextBrush" Color="#B7C2D6"/>
+                    <SolidColorBrush x:Key="SidebarAccentTextBrush" Color="#8FD3C7"/>
+                    <SolidColorBrush x:Key="BorderLineBrush" Color="#D8DEE8"/>
+                    <SolidColorBrush x:Key="FieldBorderBrush" Color="#C9D3E2"/>
+                    <SolidColorBrush x:Key="RowBorderBrush" Color="#E5E9F0"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="#2BAE8E"/>
+                    <SolidColorBrush x:Key="AccentStrongBrush" Color="#1D8D73"/>
+                    <SolidColorBrush x:Key="DangerTextBrush" Color="#8A3840"/>
+                    <SolidColorBrush x:Key="SettingsOverlayBrush" Color="#66000000"/>
+                    <SolidColorBrush x:Key="ThemeSelectedBrush" Color="#24314C"/>
+                    <SolidColorBrush x:Key="DayCellBrush" Color="#F8FAFD"/>
+                    <SolidColorBrush x:Key="DayCellBorderBrush" Color="#B8C2D1"/>
+                    <SolidColorBrush x:Key="RowHighlightBrush" Color="#F1F7FF"/>
+                    <SolidColorBrush x:Key="DayRowHighlightBrush" Color="#EAF5FF"/>
+                    <SolidColorBrush x:Key="DayRowHighlightBorderBrush" Color="#74A7E8"/>
+                    <SolidColorBrush x:Key="DayColumnHighlightBrush" Color="#EEF7F1"/>
+                    <SolidColorBrush x:Key="DayColumnHighlightBorderBrush" Color="#72B98D"/>
+                    <SolidColorBrush x:Key="DayCrossHighlightBrush" Color="#FFF1B8"/>
+                    <SolidColorBrush x:Key="DayCrossHighlightBorderBrush" Color="#D8A400"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#0F1724"/>
+                    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#0B1220"/>
+                    <SolidColorBrush x:Key="SidebarPanelBrush" Color="#17243A"/>
+                    <SolidColorBrush x:Key="SurfaceBrush" Color="#111827"/>
+                    <SolidColorBrush x:Key="SurfaceSoftBrush" Color="#1C2738"/>
+                    <SolidColorBrush x:Key="SurfaceSubtleBrush" Color="#182334"/>
+                    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#EAF0FA"/>
+                    <SolidColorBrush x:Key="SecondaryTextBrush" Color="#AEBBD0"/>
+                    <SolidColorBrush x:Key="MutedTextBrush" Color="#8795AA"/>
+                    <SolidColorBrush x:Key="SidebarTextBrush" Color="#F7FAFF"/>
+                    <SolidColorBrush x:Key="SidebarMutedTextBrush" Color="#A7B2C4"/>
+                    <SolidColorBrush x:Key="SidebarAccentTextBrush" Color="#8FD3C7"/>
+                    <SolidColorBrush x:Key="BorderLineBrush" Color="#28364C"/>
+                    <SolidColorBrush x:Key="FieldBorderBrush" Color="#38475E"/>
+                    <SolidColorBrush x:Key="RowBorderBrush" Color="#223047"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="#22C19B"/>
+                    <SolidColorBrush x:Key="AccentStrongBrush" Color="#159071"/>
+                    <SolidColorBrush x:Key="DangerTextBrush" Color="#F2A0AA"/>
+                    <SolidColorBrush x:Key="SettingsOverlayBrush" Color="#AA020617"/>
+                    <SolidColorBrush x:Key="ThemeSelectedBrush" Color="#31405F"/>
+                    <SolidColorBrush x:Key="DayCellBrush" Color="#182334"/>
+                    <SolidColorBrush x:Key="DayCellBorderBrush" Color="#41516A"/>
+                    <SolidColorBrush x:Key="RowHighlightBrush" Color="#142844"/>
+                    <SolidColorBrush x:Key="DayRowHighlightBrush" Color="#173354"/>
+                    <SolidColorBrush x:Key="DayRowHighlightBorderBrush" Color="#5796DC"/>
+                    <SolidColorBrush x:Key="DayColumnHighlightBrush" Color="#143329"/>
+                    <SolidColorBrush x:Key="DayColumnHighlightBorderBrush" Color="#4BA477"/>
+                    <SolidColorBrush x:Key="DayCrossHighlightBrush" Color="#4A3F19"/>
+                    <SolidColorBrush x:Key="DayCrossHighlightBorderBrush" Color="#D8A400"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+  
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+</Application>

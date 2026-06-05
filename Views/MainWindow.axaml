@@ -1,0 +1,544 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CrossPlatformPlanner.ViewModels"
+        xmlns:models="using:CrossPlatformPlanner.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="820"
+        x:Class="CrossPlatformPlanner.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Планер дисциплины"
+        Width="1280"
+        Height="820"
+        MinWidth="980"
+        MinHeight="680">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Inter, Segoe UI, Arial"/>
+        </Style>
+        <Style Selector="Button.month-card">
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="Border.metric">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+        <Style Selector="TextBox.add-input">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="ComboBox.add-input">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.icon-button">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="Button.action-button">
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="{DynamicResource ThemeSelectedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeSelectedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.theme-option">
+            <Setter Property="MinHeight" Value="52"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceSoftBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.theme-option.selected">
+            <Setter Property="Background" Value="{DynamicResource ThemeSelectedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource ThemeSelectedBrush}"/>
+        </Style>
+        <Style Selector="Border.settings-card">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLineBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+        <Style Selector="ToggleButton.day-cell">
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{DynamicResource DayCellBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DayCellBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.12"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.day-cell:checked">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentStrongBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style Selector="Border.day-cell-frame.row-highlight ToggleButton.day-cell">
+            <Setter Property="Background" Value="{DynamicResource DayRowHighlightBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DayRowHighlightBorderBrush}"/>
+        </Style>
+        <Style Selector="Border.day-cell-frame.column-highlight ToggleButton.day-cell">
+            <Setter Property="Background" Value="{DynamicResource DayColumnHighlightBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DayColumnHighlightBorderBrush}"/>
+        </Style>
+        <Style Selector="Border.day-cell-frame.row-highlight.column-highlight ToggleButton.day-cell">
+            <Setter Property="Background" Value="{DynamicResource DayCrossHighlightBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DayCrossHighlightBorderBrush}"/>
+        </Style>
+        <Style Selector="Border.day-header">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.12"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.day-header.column-highlight">
+            <Setter Property="Background" Value="{DynamicResource DayColumnHighlightBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource DayColumnHighlightBorderBrush}"/>
+        </Style>
+        <Style Selector="Border.habit-row">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.habit-row.row-highlight">
+            <Setter Property="Background" Value="{DynamicResource RowHighlightBrush}"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid Background="{DynamicResource AppBackgroundBrush}" ColumnDefinitions="320,*">
+        <Border Grid.Column="0" Background="{DynamicResource SidebarBackgroundBrush}" Padding="18">
+            <Grid RowDefinitions="Auto,Auto,Auto,*">
+                <Grid ColumnDefinitions="*,36" VerticalAlignment="Top">
+                    <TextBlock Text="Планер дисциплины"
+                               Foreground="White"
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Margin="0,0,16,0"
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="1"
+                            Classes="icon-button"
+                            Command="{Binding OpenSettingsCommand}"
+                            Width="36"
+                            Height="36"
+                            Background="{DynamicResource SidebarPanelBrush}"
+                            BorderBrush="{DynamicResource FieldBorderBrush}"
+                            Foreground="White"
+                            ToolTip.Tip="Настройки">
+                        <TextBlock Text="⚙"
+                                   FontSize="18"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Button>
+                </Grid>
+                <StackPanel Grid.Row="1">
+                    <Grid ColumnDefinitions="42,*,42" Margin="0,14,0,0" ColumnSpacing="8">
+                        <Button Classes="icon-button"
+                                Command="{Binding PreviousYearCommand}"
+                                Foreground="{DynamicResource PrimaryTextBrush}">
+                            <PathIcon Width="14"
+                                      Height="14"
+                                      Data="M 9,2 L 3,7 L 9,12"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Button>
+                        <Border Grid.Column="1"
+                                Background="{DynamicResource SidebarPanelBrush}"
+                                BorderBrush="{DynamicResource FieldBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="8">
+                            <TextBlock Text="{Binding CurrentYear}"
+                                       Foreground="White"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       HorizontalAlignment="Center"/>
+                        </Border>
+                        <Button Grid.Column="2"
+                                Classes="icon-button"
+                                Command="{Binding NextYearCommand}"
+                                Foreground="{DynamicResource PrimaryTextBrush}">
+                            <PathIcon Width="14"
+                                      Height="14"
+                                      Data="M 5,2 L 11,7 L 5,12"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+
+                <Border Grid.Row="2"
+                        Background="{DynamicResource SidebarPanelBrush}"
+                        CornerRadius="8"
+                        Padding="14"
+                        Margin="0,14,0,16">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Годовой прогресс" Foreground="{DynamicResource SidebarTextBrush}" FontWeight="SemiBold"/>
+                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding YearProgress}" Height="10"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding YearProgressText}" Foreground="White" FontSize="26" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Text="{Binding YearScoreText}" Foreground="{DynamicResource SidebarMutedTextBrush}" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock Text="{Binding BestMonthName, StringFormat='Лучший месяц: {0}'}" Foreground="{DynamicResource SidebarAccentTextBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer Grid.Row="3">
+                    <ItemsControl ItemsSource="{Binding MonthSummaries}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:MonthSummaryViewModel">
+                                <Button Classes="month-card"
+                                        Command="{Binding SelectCommand}"
+                                        CommandParameter="{Binding Month}">
+                                    <StackPanel Spacing="8">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding ProgressText}" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        </Grid>
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="8"/>
+                                        <TextBlock Text="{Binding ScoreText}" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,*" Margin="24">
+            <StackPanel>
+                <Grid ColumnDefinitions="*,190,190,190" ColumnSpacing="12">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedMonth.ShortTitle}" FontSize="30" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        <TextBlock Text="Отмечай выполнение привычек по дням, как в месячных листах Excel."
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   Margin="0,6,0,0"/>
+                    </StackPanel>
+
+                    <Border Grid.Column="1" Classes="metric">
+                        <StackPanel>
+                            <TextBlock Text="Прогресс" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding SelectedMonth.ProgressText}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Classes="metric">
+                        <StackPanel>
+                            <TextBlock Text="Выполнено / цель" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding SelectedMonth.ScoreText}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="3" Classes="metric">
+                        <StackPanel>
+                            <TextBlock Text="Привычек" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding SelectedMonth.Habits.Count}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource PrimaryTextBrush}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Border Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderLineBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12"
+                        Margin="0,14,0,0">
+                    <Grid ColumnDefinitions="Auto,Auto,*,140" ColumnSpacing="12">
+                        <ComboBox Classes="add-input"
+                                  Width="132"
+                                  ItemsSource="{Binding IconOptions}"
+                                  SelectedItem="{Binding NewHabitIcon}"
+                                  PlaceholderText="Иконка"/>
+                        <TextBox Grid.Column="1"
+                                 Classes="add-input"
+                                 Width="132"
+                                 Text="{Binding NewHabitIcon}"
+                                 PlaceholderText="Своя"
+                                 HorizontalContentAlignment="Center"/>
+                        <TextBox Grid.Column="2"
+                                 Classes="add-input"
+                                 Text="{Binding NewHabitTitle}"
+                                 PlaceholderText="Новая привычка"/>
+                        <Button Grid.Column="3"
+                                Command="{Binding AddHabitCommand}"
+                                Content="+ Добавить"
+                                MinHeight="36"
+                                Background="{DynamicResource AccentBrush}"
+                                Foreground="White"
+                                BorderBrush="{DynamicResource AccentStrongBrush}"
+                                CornerRadius="8"
+                                Padding="14,0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                FontWeight="SemiBold"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <Border Grid.Row="1"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderLineBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Margin="0,20,0,0"
+                    PointerExited="PlannerTable_OnPointerExited">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="16">
+                        <Grid ColumnDefinitions="220,*,74,44" Margin="0,0,0,8">
+                            <TextBlock Text="Привычки" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" VerticalAlignment="Center"/>
+                            <ItemsControl Grid.Column="1" ItemsSource="{Binding SelectedMonth.Days}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:DayHeaderViewModel">
+                                        <Border Width="32"
+                                                Classes="day-header"
+                                                CornerRadius="6"
+                                                BorderBrush="Transparent"
+                                                BorderThickness="1"
+                                                Classes.column-highlight="{Binding IsColumnHighlighted}"
+                                                PointerEntered="DayHeader_OnPointerEntered">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Weekday}" FontSize="11" Foreground="{DynamicResource MutedTextBrush}" HorizontalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Day}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Grid.Column="2" Text="Итог" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding SelectedMonth.Habits}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:HabitRowViewModel">
+                                            <Border Classes="habit-row"
+                                                    Classes.row-highlight="{Binding IsHighlighted}"
+                                            BorderBrush="{DynamicResource RowBorderBrush}"
+                                            BorderThickness="0,1,0,0"
+                                            Padding="0,7"
+                                            PointerEntered="HabitRow_OnPointerEntered">
+                                        <Grid ColumnDefinitions="220,*,74,44">
+                                            <Grid ColumnDefinitions="38,*" VerticalAlignment="Center">
+                                                <Border Width="30" Height="30" CornerRadius="8" Background="{DynamicResource SurfaceSoftBrush}">
+                                                    <TextBlock Text="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                                </Border>
+                                                <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="SemiBold"/>
+                                            </Grid>
+
+                                            <ItemsControl Grid.Column="1" ItemsSource="{Binding Completions}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="vm:DayCompletionViewModel">
+                                                        <Border Classes="day-cell-frame"
+                                                                Classes.row-highlight="{Binding IsRowHighlighted}"
+                                                                Classes.column-highlight="{Binding IsColumnHighlighted}"
+                                                                PointerEntered="DayCell_OnPointerEntered">
+                                                            <ToggleButton Classes="day-cell"
+                                                                          IsChecked="{Binding IsCompleted, Mode=TwoWay}"
+                                                                          IsHitTestVisible="{Binding IsEditable}">
+                                                                <TextBlock Text="✓"
+                                                                           FontSize="13"
+                                                                           LineHeight="13"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Center"/>
+                                                            </ToggleButton>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding CompletedCount}" HorizontalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}" FontWeight="Bold"/>
+                                                <TextBlock Text="{Binding ProgressText}" HorizontalAlignment="Center" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                            <Button Grid.Column="3"
+                                                    Classes="icon-button"
+                                                    Command="{Binding RemoveCommand}"
+                                                    Foreground="{DynamicResource DangerTextBrush}"
+                                                    ToolTip.Tip="Удалить привычку">
+                                                <TextBlock Text="×"
+                                                           FontSize="20"
+                                                           LineHeight="20"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <Border Grid.ColumnSpan="2"
+                IsVisible="{Binding IsSettingsOpen}"
+                Background="{DynamicResource SettingsOverlayBrush}">
+            <Grid Margin="24">
+                <Border Classes="settings-card"
+                        Width="460"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                    <StackPanel Spacing="18">
+                        <Grid ColumnDefinitions="*,36">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Настройки"
+                                           FontSize="26"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Text="Внешний вид и перенос данных"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           FontSize="13"/>
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Classes="icon-button"
+                                    Command="{Binding CloseSettingsCommand}"
+                                    Foreground="{DynamicResource PrimaryTextBrush}"
+                                    ToolTip.Tip="Закрыть">
+                                <TextBlock Text="×"
+                                           FontSize="18"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Button>
+                        </Grid>
+
+                        <Border Background="{DynamicResource SurfaceSoftBrush}"
+                                BorderBrush="{DynamicResource BorderLineBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="14">
+                            <StackPanel Spacing="12">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Text="Тема приложения"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="Сохраняется"
+                                               Foreground="{DynamicResource SecondaryTextBrush}"
+                                               FontSize="12"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                                    <Button Classes="theme-option"
+                                            Classes.selected="{Binding IsSystemThemeSelected}"
+                                            Command="{Binding UseSystemThemeCommand}"
+                                            Content="Системная"/>
+                                    <Button Grid.Column="1"
+                                            Classes="theme-option"
+                                            Classes.selected="{Binding IsLightThemeSelected}"
+                                            Command="{Binding UseLightThemeCommand}"
+                                            Content="Светлая"/>
+                                    <Button Grid.Column="2"
+                                            Classes="theme-option"
+                                            Classes.selected="{Binding IsDarkThemeSelected}"
+                                            Command="{Binding UseDarkThemeCommand}"
+                                            Content="Тёмная"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{DynamicResource SurfaceSoftBrush}"
+                                BorderBrush="{DynamicResource BorderLineBrush}"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="14">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Перенос данных"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource PrimaryTextBrush}"/>
+                                <TextBlock Text="На старом компьютере нажми «Скачать файл» и сохрани файл с данными. Перенеси его на новый компьютер через флешку, облако или мессенджер. На новом компьютере нажми «Загрузить файл» и выбери этот файл."
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                    <Button Classes="action-button"
+                                            Content="Загрузить файл"
+                                            Click="ImportData_OnClick"/>
+                                    <Button Grid.Column="1"
+                                            Classes="action-button"
+                                            Content="Скачать файл"
+                                            Click="ExportData_OnClick"/>
+                                </Grid>
+                                <TextBlock Text="{Binding DataTransferStatus}"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+
+</Window>
