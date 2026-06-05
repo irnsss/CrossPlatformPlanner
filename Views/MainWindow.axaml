@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="820"
         x:Class="CrossPlatformPlanner.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/discipline-planner-icon.ico"
         Title="Планер дисциплины"
         Width="1280"
         Height="820"
@@ -197,6 +197,7 @@
                     <Grid ColumnDefinitions="42,*,42" Margin="0,14,0,0" ColumnSpacing="8">
                         <Button Classes="icon-button"
                                 Command="{Binding PreviousYearCommand}"
+                                IsEnabled="{Binding CanMoveToPreviousYear}"
                                 Foreground="{DynamicResource PrimaryTextBrush}">
                             <PathIcon Width="14"
                                       Height="14"
@@ -219,6 +220,7 @@
                         <Button Grid.Column="2"
                                 Classes="icon-button"
                                 Command="{Binding NextYearCommand}"
+                                IsEnabled="{Binding CanMoveToNextYear}"
                                 Foreground="{DynamicResource PrimaryTextBrush}">
                             <PathIcon Width="14"
                                       Height="14"

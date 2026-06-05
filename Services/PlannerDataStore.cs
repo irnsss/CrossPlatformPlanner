@@ -67,11 +67,23 @@ public static class PlannerDataStore
 
     public static PlannerDataSnapshot? LoadFromStream(Stream stream)
     {
+        if (stream.CanSeek)
+        {
+            stream.Position = 0;
+        }
+
         return JsonSerializer.Deserialize<PlannerDataSnapshot>(stream, JsonOptions);
     }
 
     public static void SaveToStream(Stream stream, PlannerDataSnapshot snapshot)
     {
+        if (stream.CanSeek)
+        {
+            stream.Position = 0;
+            stream.SetLength(0);
+        }
+
         JsonSerializer.Serialize(stream, snapshot, JsonOptions);
+        stream.Flush();
     }
 }

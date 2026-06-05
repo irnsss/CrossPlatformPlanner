@@ -12,3 +12,6 @@ obj/
 
 TestResults/
 *.nupkg
+
+release/
+tmp/

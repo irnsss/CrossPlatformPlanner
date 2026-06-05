@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -15,6 +16,9 @@ namespace CrossPlatformPlanner.ViewModels;
 
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
+    private const int MinSupportedYear = 1;
+    private const int MaxSupportedYear = 9999;
+
     private static readonly DisciplineHabitSeed[] DefaultHabitTemplates =
     [
         new("💵", "4 часа фокуса"),
@@ -69,11 +73,14 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
         habitTemplates.AddRange(DefaultHabitTemplates);
         LoadLocalData();
+        ApplyTheme(SelectedTheme);
     }
 
     public bool IsSystemThemeSelected => SelectedTheme == PlannerThemeMode.System;
     public bool IsLightThemeSelected => SelectedTheme == PlannerThemeMode.Light;
     public bool IsDarkThemeSelected => SelectedTheme == PlannerThemeMode.Dark;
+    public bool CanMoveToPreviousYear => CurrentYear > MinSupportedYear;
+    public bool CanMoveToNextYear => CurrentYear < MaxSupportedYear;
     public int YearCompleted => Months.Sum(month => month.CompletedCount);
     public int YearTarget => Months.Sum(month => month.TargetCount);
     public double YearProgress => YearTarget == 0 ? 0 : Math.Round(YearCompleted * 100.0 / YearTarget, 1);
@@ -111,9 +118,20 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    partial void OnCurrentYearChanged(int value)
+    {
+        OnPropertyChanged(nameof(CanMoveToPreviousYear));
+        OnPropertyChanged(nameof(CanMoveToNextYear));
+    }
+
     [RelayCommand]
     private void PreviousYear()
     {
+        if (!CanMoveToPreviousYear)
+        {
+            return;
+        }
+
         CurrentYear--;
         RebuildYear(Math.Clamp(SelectedMonth?.Month ?? DateTime.Today.Month, 1, 12));
         SaveLocalData();
@@ -122,6 +140,11 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void NextYear()
     {
+        if (!CanMoveToNextYear)
+        {
+            return;
+        }
+
         CurrentYear++;
         RebuildYear(Math.Clamp(SelectedMonth?.Month ?? DateTime.Today.Month, 1, 12));
         SaveLocalData();
@@ -220,22 +243,44 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     private void ApplySnapshot(PlannerDataSnapshot snapshot)
     {
         suspendPersistence = true;
-        habitTemplates.Clear();
-        habitTemplates.AddRange(snapshot.Habits.Count == 0 ? DefaultHabitTemplates : snapshot.Habits);
-
-        completedEntries.Clear();
-        foreach (var completion in snapshot.Completions)
+        try
         {
-            if (DateOnly.TryParse(completion.Date, out var date))
-            {
-                completedEntries.Add(new CompletionEntry(completion.HabitTitle, date));
-            }
-        }
+            habitTemplates.Clear();
+            habitTemplates.AddRange(NormalizeHabits(snapshot.Habits));
 
-        SelectedTheme = ParseThemeMode(snapshot.ThemeMode);
-        CurrentYear = snapshot.CurrentYear == 0 ? DateTime.Today.Year : snapshot.CurrentYear;
-        RebuildYear(snapshot.SelectedMonth == 0 ? DateTime.Today.Month : snapshot.SelectedMonth);
-        suspendPersistence = false;
+            completedEntries.Clear();
+            var knownHabitTitles = habitTemplates.ToDictionary(
+                habit => habit.Title,
+                habit => habit.Title,
+                StringComparer.CurrentCultureIgnoreCase);
+            foreach (var completion in snapshot.Completions ?? Array.Empty<HabitCompletionSnapshot>())
+            {
+                if (completion is null)
+                {
+                    continue;
+                }
+
+                var habitTitle = completion.HabitTitle?.Trim();
+                if (string.IsNullOrWhiteSpace(habitTitle) ||
+                    !knownHabitTitles.TryGetValue(habitTitle, out var normalizedHabitTitle))
+                {
+                    continue;
+                }
+
+                if (TryParseSnapshotDate(completion.Date, out var date))
+                {
+                    completedEntries.Add(new CompletionEntry(normalizedHabitTitle, date));
+                }
+            }
+
+            SelectedTheme = ParseThemeMode(snapshot.ThemeMode);
+            CurrentYear = NormalizeYear(snapshot.CurrentYear);
+            RebuildYear(NormalizeMonth(snapshot.SelectedMonth));
+        }
+        finally
+        {
+            suspendPersistence = false;
+        }
     }
 
     private void SelectMonth(MonthPlanViewModel? month)
@@ -368,6 +413,57 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             PlannerThemeMode.Dark => ThemeVariant.Dark,
             _ => ThemeVariant.Default
         };
+    }
+
+    private static IReadOnlyList<DisciplineHabitSeed> NormalizeHabits(IEnumerable<DisciplineHabitSeed>? habits)
+    {
+        if (habits is null)
+        {
+            return DefaultHabitTemplates;
+        }
+
+        var normalizedHabits = new List<DisciplineHabitSeed>();
+        var knownTitles = new HashSet<string>(StringComparer.CurrentCultureIgnoreCase);
+        foreach (var habit in habits)
+        {
+            if (habit is null)
+            {
+                continue;
+            }
+
+            var title = habit.Title?.Trim();
+            if (string.IsNullOrWhiteSpace(title) || !knownTitles.Add(title))
+            {
+                continue;
+            }
+
+            var icon = string.IsNullOrWhiteSpace(habit.Icon) ? "•" : habit.Icon.Trim();
+            normalizedHabits.Add(new DisciplineHabitSeed(icon, title));
+        }
+
+        return normalizedHabits.Count == 0 ? DefaultHabitTemplates : normalizedHabits;
+    }
+
+    private static int NormalizeYear(int year)
+    {
+        return year == 0
+            ? DateTime.Today.Year
+            : Math.Clamp(year, MinSupportedYear, MaxSupportedYear);
+    }
+
+    private static int NormalizeMonth(int month)
+    {
+        return Math.Clamp(month == 0 ? DateTime.Today.Month : month, 1, 12);
+    }
+
+    private static bool TryParseSnapshotDate(string? value, out DateOnly date)
+    {
+        return DateOnly.TryParseExact(
+            value,
+            "yyyy-MM-dd",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out date);
     }
 
     private readonly record struct CompletionEntry(string HabitTitle, DateOnly Date);
